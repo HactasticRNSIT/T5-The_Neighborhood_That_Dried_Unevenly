@@ -1,0 +1,5 @@
+zone_id,moisture_risk_score,drying_time_hr,rainfall_mm,humidity,drainage_efficiency,clogged_drain_reports,impervious_surface_percent,soil_type,soil_absorption_score,slope,groundwater_depth,construction_disturbance,previous_rain_saturation,risk_level
+Z008,65.56,14.74,18.36,91.30,-0.57,8,39.68,mixed,0.50,2.03,1.39,22,49.93,High
+Z016,71.97,20.56,54.56,81.70,1.21,1,83.90,clay,0.20,0.79,0.95,18,86.20,High
+Z030,69.16,16.07,17.60,75.04,-1.17,14,79.91,clay,0.20,2.86,7.49,14,101.59,High
+Z052,66.33,21.02,84.61,74.84,-0.87,11,68.58,clay,0.20,2.36,6.95,8,132.13,High
