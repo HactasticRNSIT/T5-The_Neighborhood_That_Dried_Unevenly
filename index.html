@@ -4,6 +4,10 @@
     <title>Urban Moisture Intelligence System</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background: #f4f8fb;
@@ -13,15 +17,15 @@
         }
 
         header {
-            background: #0b3d5c;
+            background: linear-gradient(135deg, #0b3d5c, #075985);
             color: white;
-            padding: 25px;
+            padding: 28px;
             text-align: center;
         }
 
         header h1 {
             margin: 0;
-            font-size: 32px;
+            font-size: 34px;
         }
 
         header p {
@@ -29,18 +33,66 @@
             font-size: 16px;
         }
 
-        .theme-toggle {
-            margin-top: 15px;
+        .container {
+            padding: 25px;
         }
 
-        .theme-toggle button {
+        .login-screen {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0b3d5c, #020617);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+        }
+
+        .login-card {
+            width: 380px;
             background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .login-card h1 {
             color: #0b3d5c;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .login-card p {
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .login-card input {
+            width: 100%;
+            margin: 8px 0;
+            padding: 12px;
+        }
+
+        .login-card button {
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .login-error {
+            color: #dc2626;
+            text-align: center;
+            margin-top: 12px;
             font-weight: bold;
         }
 
-        .container {
-            padding: 25px;
+        #app {
+            display: none;
+        }
+
+        .top-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
         }
 
         .cards {
@@ -53,9 +105,9 @@
         .card {
             background: white;
             padding: 20px;
-            border-radius: 14px;
+            border-radius: 16px;
             width: 210px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
         }
 
         .card p {
@@ -73,24 +125,26 @@
         section {
             background: white;
             margin-bottom: 25px;
-            padding: 22px;
-            border-radius: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 24px;
+            border-radius: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         }
 
         h2 {
             color: #0b3d5c;
             margin-top: 0;
+            letter-spacing: 0.5px;
         }
 
         button {
             background: #0b3d5c;
             color: white;
             border: none;
-            padding: 10px 14px;
-            border-radius: 8px;
+            padding: 11px 16px;
+            border-radius: 9px;
             cursor: pointer;
             margin: 5px;
+            font-weight: bold;
         }
 
         button:hover {
@@ -98,10 +152,10 @@
         }
 
         input, select {
-            padding: 8px;
+            padding: 9px;
             margin: 6px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
         }
 
         table {
@@ -109,46 +163,35 @@
             border-collapse: collapse;
             margin-top: 15px;
             background: white;
+            border-radius: 12px;
+            overflow: hidden;
         }
 
         th {
             background: #0b3d5c;
             color: white;
-            padding: 10px;
+            padding: 12px;
             text-align: left;
         }
 
         td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            padding: 11px;
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .Low {
-            color: green;
+            color: #16a34a;
             font-weight: bold;
         }
 
         .Medium {
-            color: orange;
+            color: #f59e0b;
             font-weight: bold;
         }
 
         .High {
-            color: red;
+            color: #dc2626;
             font-weight: bold;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 12px;
-        }
-
-        .output {
-            background: #eef6fb;
-            padding: 15px;
-            border-radius: 10px;
-            white-space: pre-line;
         }
 
         .small-note {
@@ -158,14 +201,14 @@
 
         .zone-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
             gap: 10px;
             margin-top: 15px;
         }
 
         .zone-box {
-            padding: 12px 6px;
-            border-radius: 10px;
+            padding: 13px 6px;
+            border-radius: 11px;
             text-align: center;
             font-size: 13px;
             font-weight: bold;
@@ -211,6 +254,161 @@
             border-radius: 4px;
         }
 
+        .chart-wrap {
+            display: flex;
+            align-items: flex-end;
+            gap: 22px;
+            height: 260px;
+            padding: 20px;
+            border-radius: 16px;
+            background: #eef6fb;
+        }
+
+        .bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+        }
+
+        .bar {
+            width: 70%;
+            border-radius: 10px 10px 0 0;
+            min-height: 8px;
+            transition: height 0.4s ease;
+        }
+
+        .bar-label {
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        .bar-value {
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #0b3d5c;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .report-title h3 {
+            margin: 0;
+            font-size: 24px;
+            color: #0b3d5c;
+        }
+
+        .report-title p {
+            margin: 5px 0 0;
+            color: #64748b;
+        }
+
+        .risk-badge {
+            padding: 10px 18px;
+            border-radius: 999px;
+            color: white;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-low {
+            background: #16a34a;
+        }
+
+        .badge-medium {
+            background: #f59e0b;
+        }
+
+        .badge-high {
+            background: #dc2626;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .metric-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .metric-card span {
+            display: block;
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 7px;
+        }
+
+        .metric-card strong {
+            font-size: 22px;
+            color: #0b3d5c;
+        }
+
+        .insight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .insight-box {
+            border-radius: 14px;
+            padding: 18px;
+            line-height: 1.6;
+        }
+
+        .cause-box {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+        }
+
+        .action-box {
+            background: #ecfdf5;
+            border: 1px solid #bbf7d0;
+        }
+
+        .insight-box h3 {
+            margin-top: 0;
+        }
+
+        .search-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .search-row input {
+            min-width: 210px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+        }
+
+        .output {
+            background: #eef6fb;
+            padding: 15px;
+            border-radius: 10px;
+            white-space: pre-line;
+        }
+
         body.dark-mode {
             background: #0f172a;
             color: #e5e7eb;
@@ -220,25 +418,23 @@
             background: #020617;
         }
 
-        body.dark-mode section {
-            background: #1e293b;
-            color: #e5e7eb;
-        }
-
+        body.dark-mode section,
         body.dark-mode .card {
             background: #1e293b;
             color: #e5e7eb;
         }
 
-        body.dark-mode .card p {
+        body.dark-mode .card p,
+        body.dark-mode .small-note,
+        body.dark-mode .report-title p {
             color: #cbd5e1;
         }
 
-        body.dark-mode .value {
-            color: #38bdf8;
-        }
-
-        body.dark-mode h2 {
+        body.dark-mode .value,
+        body.dark-mode h2,
+        body.dark-mode .report-title h3,
+        body.dark-mode .metric-card strong,
+        body.dark-mode .bar-value {
             color: #38bdf8;
         }
 
@@ -262,13 +458,25 @@
             border: 1px solid #475569;
         }
 
-        body.dark-mode .output {
+        body.dark-mode .output,
+        body.dark-mode .chart-wrap {
             background: #0f172a;
             color: #e5e7eb;
         }
 
-        body.dark-mode .small-note {
-            color: #cbd5e1;
+        body.dark-mode .metric-card {
+            background: #0f172a;
+            border-color: #334155;
+        }
+
+        body.dark-mode .cause-box {
+            background: #422006;
+            border-color: #92400e;
+        }
+
+        body.dark-mode .action-box {
+            background: #052e16;
+            border-color: #166534;
         }
 
         body.dark-mode .theme-toggle button {
@@ -280,233 +488,225 @@
 
 <body>
 
-<header>
-    <h1>Urban Moisture Intelligence System</h1>
-    <p>Browser-based prototype for identifying slow-drying neighborhoods after rainfall</p>
+<div id="loginScreen" class="login-screen">
+    <div class="login-card">
+        <h1>Urban Moisture Login</h1>
+        <p>Enter credentials to access the dashboard.</p>
 
-    <div class="theme-toggle">
-        <button onclick="toggleTheme()" id="themeButton">Switch to Dark Mode</button>
+        <input id="username" type="text" placeholder="Username">
+        <input id="password" type="password" placeholder="Password">
+
+        <button onclick="login()">Login</button>
+
+        <div id="loginError" class="login-error"></div>
+
+        <p class="small-note">Demo credentials: admin / admin123</p>
     </div>
-</header>
+</div>
 
-<div class="container">
+<div id="app">
+    <header>
+        <h1>Urban Moisture Intelligence System</h1>
+        <p>Browser-based prototype for identifying slow-drying neighborhoods after rainfall</p>
 
-    <section>
-        <h2>Controls</h2>
-        <button onclick="generateData()">Generate Synthetic City Data</button>
-        <button onclick="downloadCSV()">Download Full CSV</button>
-        <button onclick="downloadHighRiskCSV()">Download High-Risk CSV</button>
-        <p class="small-note">
-            This browser version uses the same scoring logic as the C prototype.
-        </p>
-    </section>
-
-    <div class="cards">
-        <div class="card">
-            <p>Total Zones</p>
-            <div class="value" id="totalZones">0</div>
+        <div class="top-actions">
+            <button onclick="toggleTheme()" id="themeButton">Switch to Dark Mode</button>
+            <button onclick="logout()">Logout</button>
         </div>
+    </header>
 
-        <div class="card">
-            <p>Low Risk</p>
-            <div class="value" id="lowRisk">0</div>
-        </div>
+    <div class="container">
 
-        <div class="card">
-            <p>Medium Risk</p>
-            <div class="value" id="mediumRisk">0</div>
-        </div>
+        <section>
+            <h2>Controls</h2>
+            <button onclick="generateData()">Generate Synthetic City Data</button>
+            <button onclick="downloadCSV()">Download Full CSV</button>
+            <button onclick="downloadHighRiskCSV()">Download High-Risk CSV</button>
+            <p class="small-note">
+                This browser version uses the same scoring logic as the C prototype.
+            </p>
+        </section>
 
-        <div class="card">
-            <p>High Risk</p>
-            <div class="value" id="highRisk">0</div>
-        </div>
-
-        <div class="card">
-            <p>Average Drying Time</p>
-            <div class="value" id="avgDrying">0 hr</div>
-        </div>
-
-        <div class="card">
-            <p>Average Risk Score</p>
-            <div class="value" id="avgRisk">0</div>
-        </div>
-    </div>
-
-    <section>
-        <h2>Top Priority Zones</h2>
-        <div id="priorityTable"></div>
-    </section>
-
-    <section>
-        <h2>Mini Risk Map Grid</h2>
-        <p class="small-note">
-            Each box represents one neighborhood zone. Green = Low risk, Orange = Medium risk, Red = High risk.
-            Click any zone box to open its detailed report.
-        </p>
-
-        <div class="grid-legend">
-            <div class="legend-item">
-                <div class="legend-color" style="background:#16a34a;"></div>
-                <span>Low Risk</span>
+        <div class="cards">
+            <div class="card">
+                <p>Total Zones</p>
+                <div class="value" id="totalZones">0</div>
             </div>
 
-            <div class="legend-item">
-                <div class="legend-color" style="background:#f59e0b;"></div>
-                <span>Medium Risk</span>
+            <div class="card">
+                <p>Low Risk</p>
+                <div class="value" id="lowRisk">0</div>
             </div>
 
-            <div class="legend-item">
-                <div class="legend-color" style="background:#dc2626;"></div>
-                <span>High Risk</span>
+            <div class="card">
+                <p>Medium Risk</p>
+                <div class="value" id="mediumRisk">0</div>
+            </div>
+
+            <div class="card">
+                <p>High Risk</p>
+                <div class="value" id="highRisk">0</div>
+            </div>
+
+            <div class="card">
+                <p>Average Drying Time</p>
+                <div class="value" id="avgDrying">0 hr</div>
+            </div>
+
+            <div class="card">
+                <p>Average Risk Score</p>
+                <div class="value" id="avgRisk">0</div>
             </div>
         </div>
 
-        <div id="zoneGrid" class="zone-grid"></div>
-    </section>
+        <section>
+            <h2>Risk Distribution Chart</h2>
+            <div id="riskChart" class="chart-wrap"></div>
+        </section>
 
-    <section>
-        <h2>Zone Report</h2>
-        <label>Select Zone:</label>
-        <select id="zoneSelect"></select>
-        <button onclick="showZoneReport()">Show Report</button>
-        <div class="output" id="zoneReport">Generate data first, then select a zone.</div>
-    </section>
+        <section>
+            <h2>Top Priority Zones</h2>
+            <div id="priorityTable"></div>
+        </section>
 
-    <section>
-        <h2>Compare Two Zones</h2>
-        <label>Zone A:</label>
-        <select id="compareA"></select>
+        <section>
+            <h2>Mini Risk Map Grid</h2>
+            <p class="small-note">
+                Each box represents one neighborhood zone. Green = Low risk, Orange = Medium risk, Red = High risk.
+                Click any zone box to open its detailed report.
+            </p>
 
-        <label>Zone B:</label>
-        <select id="compareB"></select>
+            <div class="grid-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background:#16a34a;"></div>
+                    <span>Low Risk</span>
+                </div>
 
-        <button onclick="compareZones()">Compare</button>
+                <div class="legend-item">
+                    <div class="legend-color" style="background:#f59e0b;"></div>
+                    <span>Medium Risk</span>
+                </div>
 
-        <div id="compareOutput"></div>
-    </section>
-
-    <section>
-        <h2>Manual Moisture Risk Prediction</h2>
-
-        <div class="grid">
-            <div>
-                <label>Rainfall mm</label><br>
-                <input id="m_rainfall" type="number" value="60">
+                <div class="legend-item">
+                    <div class="legend-color" style="background:#dc2626;"></div>
+                    <span>High Risk</span>
+                </div>
             </div>
 
-            <div>
-                <label>Humidity %</label><br>
-                <input id="m_humidity" type="number" value="88">
-            </div>
-
-            <div>
-                <label>Temperature °C</label><br>
-                <input id="m_temperature" type="number" value="27">
-            </div>
-
-            <div>
-                <label>Wind Speed</label><br>
-                <input id="m_wind" type="number" value="6">
-            </div>
-
-            <div>
-                <label>Solar Radiation</label><br>
-                <input id="m_solar" type="number" value="350">
-            </div>
-
-            <div>
-                <label>Cloud Cover %</label><br>
-                <input id="m_cloud" type="number" value="75">
-            </div>
-
-            <div>
-                <label>Drain Density</label><br>
-                <input id="m_drainDensity" type="number" value="1.2">
-            </div>
-
-            <div>
-                <label>Drain Capacity 0-1</label><br>
-                <input id="m_drainCapacity" type="number" value="0.5">
-            </div>
-
-            <div>
-                <label>Clogged Drain Reports</label><br>
-                <input id="m_clogged" type="number" value="10">
-            </div>
-
-            <div>
-                <label>Impervious Surface %</label><br>
-                <input id="m_impervious" type="number" value="82">
-            </div>
-
-            <div>
-                <label>Soil Type</label><br>
-                <select id="m_soil">
-                    <option value="sandy">Sandy</option>
-                    <option value="loamy">Loamy</option>
-                    <option value="mixed">Mixed</option>
-                    <option value="clay" selected>Clay</option>
+            <div class="search-row">
+                <label>Filter Risk:</label>
+                <select id="riskFilter" onchange="renderZoneGrid()">
+                    <option value="All">All</option>
+                    <option value="Low">Low Risk</option>
+                    <option value="Medium">Medium Risk</option>
+                    <option value="High">High Risk</option>
                 </select>
             </div>
 
-            <div>
-                <label>NDVI Vegetation Index</label><br>
-                <input id="m_ndvi" type="number" value="0.25">
+            <div id="zoneGrid" class="zone-grid"></div>
+        </section>
+
+        <section>
+            <h2>Zone Report</h2>
+
+            <div class="search-row">
+                <label>Select Zone:</label>
+                <select id="zoneSelect"></select>
+                <button onclick="showZoneReport()">Show Report</button>
+
+                <label>Search Zone ID:</label>
+                <input id="zoneSearch" type="number" placeholder="Example: 29">
+                <button onclick="searchZone()">Search</button>
             </div>
 
-            <div>
-                <label>Slope</label><br>
-                <input id="m_slope" type="number" value="1.4">
+            <div id="zoneReport">
+                Generate data first, then select or search a zone.
+            </div>
+        </section>
+
+        <section>
+            <h2>Compare Two Zones</h2>
+            <label>Zone A:</label>
+            <select id="compareA"></select>
+
+            <label>Zone B:</label>
+            <select id="compareB"></select>
+
+            <button onclick="compareZones()">Compare</button>
+
+            <div id="compareOutput"></div>
+        </section>
+
+        <section>
+            <h2>Manual Moisture Risk Prediction</h2>
+
+            <div class="form-grid">
+                <div><label>Rainfall mm</label><br><input id="m_rainfall" type="number" value="60"></div>
+                <div><label>Humidity %</label><br><input id="m_humidity" type="number" value="88"></div>
+                <div><label>Temperature °C</label><br><input id="m_temperature" type="number" value="27"></div>
+                <div><label>Wind Speed</label><br><input id="m_wind" type="number" value="6"></div>
+                <div><label>Solar Radiation</label><br><input id="m_solar" type="number" value="350"></div>
+                <div><label>Cloud Cover %</label><br><input id="m_cloud" type="number" value="75"></div>
+                <div><label>Drain Density</label><br><input id="m_drainDensity" type="number" value="1.2"></div>
+                <div><label>Drain Capacity 0-1</label><br><input id="m_drainCapacity" type="number" value="0.5"></div>
+                <div><label>Clogged Drain Reports</label><br><input id="m_clogged" type="number" value="10"></div>
+                <div><label>Impervious Surface %</label><br><input id="m_impervious" type="number" value="82"></div>
+
+                <div>
+                    <label>Soil Type</label><br>
+                    <select id="m_soil">
+                        <option value="sandy">Sandy</option>
+                        <option value="loamy">Loamy</option>
+                        <option value="mixed">Mixed</option>
+                        <option value="clay" selected>Clay</option>
+                    </select>
+                </div>
+
+                <div><label>NDVI Vegetation Index</label><br><input id="m_ndvi" type="number" value="0.25"></div>
+                <div><label>Slope</label><br><input id="m_slope" type="number" value="1.4"></div>
+                <div><label>Elevation</label><br><input id="m_elevation" type="number" value="850"></div>
+                <div><label>Groundwater Depth m</label><br><input id="m_groundwater" type="number" value="1.6"></div>
+                <div><label>Active Construction Sites</label><br><input id="m_constructionSites" type="number" value="4"></div>
+                <div><label>Excavation Count</label><br><input id="m_excavation" type="number" value="3"></div>
+                <div><label>Debris Complaints</label><br><input id="m_debris" type="number" value="5"></div>
+                <div><label>Previous Rainfall 24h</label><br><input id="m_prev24" type="number" value="30"></div>
+                <div><label>Previous Rainfall 7d</label><br><input id="m_prev7" type="number" value="150"></div>
             </div>
 
-            <div>
-                <label>Elevation</label><br>
-                <input id="m_elevation" type="number" value="850">
+            <br>
+            <button onclick="manualPrediction()">Predict Risk</button>
+
+            <div id="manualOutput" style="margin-top:15px;">
+                Enter values and click Predict Risk.
             </div>
+        </section>
 
-            <div>
-                <label>Groundwater Depth m</label><br>
-                <input id="m_groundwater" type="number" value="1.6">
-            </div>
-
-            <div>
-                <label>Active Construction Sites</label><br>
-                <input id="m_constructionSites" type="number" value="4">
-            </div>
-
-            <div>
-                <label>Excavation Count</label><br>
-                <input id="m_excavation" type="number" value="3">
-            </div>
-
-            <div>
-                <label>Debris Complaints</label><br>
-                <input id="m_debris" type="number" value="5">
-            </div>
-
-            <div>
-                <label>Previous Rainfall 24h</label><br>
-                <input id="m_prev24" type="number" value="30">
-            </div>
-
-            <div>
-                <label>Previous Rainfall 7d</label><br>
-                <input id="m_prev7" type="number" value="150">
-            </div>
-        </div>
-
-        <br>
-        <button onclick="manualPrediction()">Predict Risk</button>
-
-        <div class="output" id="manualOutput">Enter values and click Predict Risk.</div>
-    </section>
-
+    </div>
 </div>
 
 <script>
     const NUM_ZONES = 100;
     let zones = [];
+
+    function login() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        if (username === "admin" && password === "admin123") {
+            document.getElementById("loginScreen").style.display = "none";
+            document.getElementById("app").style.display = "block";
+            localStorage.setItem("loggedIn", "true");
+            generateData();
+        } else {
+            document.getElementById("loginError").innerText = "Invalid username or password.";
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem("loggedIn");
+        document.getElementById("app").style.display = "none";
+        document.getElementById("loginScreen").style.display = "flex";
+    }
 
     function randomDouble(min, max) {
         return min + Math.random() * (max - min);
@@ -654,30 +854,68 @@
         populateSelectors();
         showPriorityZones();
         renderZoneGrid();
+        renderRiskChart();
+        showZoneReport();
     }
 
-    function updateDashboard() {
+    function getRiskCounts() {
         let low = 0;
         let medium = 0;
         let high = 0;
-        let totalDrying = 0;
-        let totalRisk = 0;
 
         zones.forEach(z => {
             if (z.risk_level === "Low") low++;
             else if (z.risk_level === "Medium") medium++;
             else high++;
+        });
 
+        return { low, medium, high };
+    }
+
+    function updateDashboard() {
+        const counts = getRiskCounts();
+
+        let totalDrying = 0;
+        let totalRisk = 0;
+
+        zones.forEach(z => {
             totalDrying += z.drying_time_hr;
             totalRisk += z.moisture_risk_score;
         });
 
         document.getElementById("totalZones").innerText = zones.length;
-        document.getElementById("lowRisk").innerText = low;
-        document.getElementById("mediumRisk").innerText = medium;
-        document.getElementById("highRisk").innerText = high;
+        document.getElementById("lowRisk").innerText = counts.low;
+        document.getElementById("mediumRisk").innerText = counts.medium;
+        document.getElementById("highRisk").innerText = counts.high;
         document.getElementById("avgDrying").innerText = (totalDrying / zones.length).toFixed(2) + " hr";
         document.getElementById("avgRisk").innerText = (totalRisk / zones.length).toFixed(2);
+    }
+
+    function renderRiskChart() {
+        const counts = getRiskCounts();
+        const maxCount = Math.max(counts.low, counts.medium, counts.high, 1);
+
+        const items = [
+            { label: "Low", value: counts.low, color: "#16a34a" },
+            { label: "Medium", value: counts.medium, color: "#f59e0b" },
+            { label: "High", value: counts.high, color: "#dc2626" }
+        ];
+
+        let html = "";
+
+        items.forEach(item => {
+            const height = (item.value / maxCount) * 190;
+
+            html += `
+                <div class="bar-group">
+                    <div class="bar-value">${item.value}</div>
+                    <div class="bar" style="height:${height}px; background:${item.color};"></div>
+                    <div class="bar-label">${item.label}</div>
+                </div>
+            `;
+        });
+
+        document.getElementById("riskChart").innerHTML = html;
     }
 
     function populateSelectors() {
@@ -690,19 +928,21 @@
         compareB.innerHTML = "";
 
         zones.forEach(z => {
+            const label = "Z" + String(z.zone_id).padStart(3, "0");
+
             const option1 = document.createElement("option");
             option1.value = z.zone_id;
-            option1.text = "Z" + String(z.zone_id).padStart(3, "0");
+            option1.text = label;
             zoneSelect.appendChild(option1);
 
             const option2 = document.createElement("option");
             option2.value = z.zone_id;
-            option2.text = "Z" + String(z.zone_id).padStart(3, "0");
+            option2.text = label;
             compareA.appendChild(option2);
 
             const option3 = document.createElement("option");
             option3.value = z.zone_id;
-            option3.text = "Z" + String(z.zone_id).padStart(3, "0");
+            option3.text = label;
             compareB.appendChild(option3);
         });
 
@@ -739,31 +979,27 @@
         });
 
         html += "</table>";
-
         document.getElementById("priorityTable").innerHTML = html;
     }
 
     function renderZoneGrid() {
         const grid = document.getElementById("zoneGrid");
-
-        if (!grid) {
-            return;
-        }
+        const filter = document.getElementById("riskFilter").value;
 
         grid.innerHTML = "";
 
         zones.forEach(z => {
+            if (filter !== "All" && z.risk_level !== filter) {
+                return;
+            }
+
             const box = document.createElement("div");
 
             box.classList.add("zone-box");
 
-            if (z.risk_level === "Low") {
-                box.classList.add("zone-low");
-            } else if (z.risk_level === "Medium") {
-                box.classList.add("zone-medium");
-            } else {
-                box.classList.add("zone-high");
-            }
+            if (z.risk_level === "Low") box.classList.add("zone-low");
+            else if (z.risk_level === "Medium") box.classList.add("zone-medium");
+            else box.classList.add("zone-high");
 
             box.innerText = "Z" + String(z.zone_id).padStart(3, "0");
 
@@ -868,46 +1104,135 @@
         return { causes, recs };
     }
 
-    function showZoneReport() {
-        if (zones.length === 0) {
-            alert("Generate data first.");
+    function searchZone() {
+        const searchedId = Number(document.getElementById("zoneSearch").value);
+
+        if (!searchedId || searchedId < 1 || searchedId > NUM_ZONES) {
+            alert("Enter a valid zone number between 1 and " + NUM_ZONES);
             return;
         }
 
-        const id = parseInt(document.getElementById("zoneSelect").value);
+        document.getElementById("zoneSelect").value = searchedId;
+        showZoneReport();
+
+        document.getElementById("zoneReport").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+
+    function badgeClass(risk) {
+        if (risk === "Low") return "badge-low";
+        if (risk === "Medium") return "badge-medium";
+        return "badge-high";
+    }
+
+    function showZoneReport() {
+        if (zones.length === 0) return;
+
+        const id = parseInt(document.getElementById("zoneSelect").value || 1);
         const z = zones.find(zone => zone.zone_id === id);
 
         const result = causesAndRecommendations(z);
 
-        let text = "";
-        text += `ZONE Z${String(z.zone_id).padStart(3, "0")} MOISTURE REPORT\n`;
-        text += `Location: ${z.latitude.toFixed(6)}, ${z.longitude.toFixed(6)}\n`;
-        text += `Rainfall: ${z.rainfall_mm.toFixed(2)} mm\n`;
-        text += `Humidity: ${z.humidity.toFixed(2)} %\n`;
-        text += `Temperature: ${z.temperature.toFixed(2)} °C\n`;
-        text += `Drying Time: ${z.drying_time_hr.toFixed(2)} hours\n`;
-        text += `Moisture Risk Score: ${z.moisture_risk_score.toFixed(2)} / 100\n`;
-        text += `Risk Level: ${z.risk_level}\n\n`;
+        let causesHtml = "";
+        result.causes.forEach(c => {
+            causesHtml += `<li>${c}</li>`;
+        });
 
-        text += `Infrastructure and Environment:\n`;
-        text += `Drainage Efficiency: ${z.drainage_efficiency.toFixed(2)}\n`;
-        text += `Clogged Drain Reports: ${z.clogged_drain_reports}\n`;
-        text += `Impervious Surface: ${z.impervious_surface_percent.toFixed(2)} %\n`;
-        text += `Soil Type: ${z.soil_type}\n`;
-        text += `Soil Absorption Score: ${z.soil_absorption_score.toFixed(2)}\n`;
-        text += `NDVI: ${z.ndvi.toFixed(2)}\n`;
-        text += `Slope: ${z.slope.toFixed(2)}\n`;
-        text += `Groundwater Depth: ${z.groundwater_depth.toFixed(2)} m\n`;
-        text += `Construction Disturbance: ${z.construction_disturbance}\n`;
-        text += `Previous Rain Saturation: ${z.previous_rain_saturation.toFixed(2)}\n\n`;
+        let recsHtml = "";
+        result.recs.forEach(r => {
+            recsHtml += `<li>${r}</li>`;
+        });
 
-        text += `Likely Causes:\n`;
-        result.causes.forEach(c => text += `- ${c}\n`);
+        const html = `
+            <div class="report-header">
+                <div class="report-title">
+                    <h3>Z${String(z.zone_id).padStart(3, "0")} Neighborhood Moisture Report</h3>
+                    <p>Location: ${z.latitude.toFixed(6)}, ${z.longitude.toFixed(6)}</p>
+                </div>
 
-        text += `\nRecommended Actions:\n`;
-        result.recs.forEach(r => text += `- ${r}\n`);
+                <div class="risk-badge ${badgeClass(z.risk_level)}">
+                    ${z.risk_level.toUpperCase()} RISK
+                </div>
+            </div>
 
-        document.getElementById("zoneReport").innerText = text;
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <span>🌧 Rainfall</span>
+                    <strong>${z.rainfall_mm.toFixed(2)} mm</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>💧 Humidity</span>
+                    <strong>${z.humidity.toFixed(2)}%</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>🌡 Temperature</span>
+                    <strong>${z.temperature.toFixed(2)} °C</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>⏱ Drying Time</span>
+                    <strong>${z.drying_time_hr.toFixed(2)} hr</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>⚠ Moisture Risk Score</span>
+                    <strong>${z.moisture_risk_score.toFixed(2)} / 100</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>🛣 Drainage Efficiency</span>
+                    <strong>${z.drainage_efficiency.toFixed(2)}</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>🚧 Clogged Drain Reports</span>
+                    <strong>${z.clogged_drain_reports}</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>🏙 Impervious Surface</span>
+                    <strong>${z.impervious_surface_percent.toFixed(2)}%</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>🌱 Soil Type</span>
+                    <strong>${z.soil_type}</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>🌿 NDVI</span>
+                    <strong>${z.ndvi.toFixed(2)}</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>📐 Slope</span>
+                    <strong>${z.slope.toFixed(2)}</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>地下 Groundwater Depth</span>
+                    <strong>${z.groundwater_depth.toFixed(2)} m</strong>
+                </div>
+            </div>
+
+            <div class="insight-grid">
+                <div class="insight-box cause-box">
+                    <h3>Likely Causes</h3>
+                    <ul>${causesHtml}</ul>
+                </div>
+
+                <div class="insight-box action-box">
+                    <h3>Recommended Actions</h3>
+                    <ul>${recsHtml}</ul>
+                </div>
+            </div>
+        `;
+
+        document.getElementById("zoneReport").innerHTML = html;
     }
 
     function compareZones() {
@@ -998,19 +1323,60 @@
 
         const result = causesAndRecommendations(zone);
 
-        let text = "";
-        text += `MANUAL PREDICTION RESULT\n`;
-        text += `Drying Time: ${zone.drying_time_hr.toFixed(2)} hours\n`;
-        text += `Moisture Risk Score: ${zone.moisture_risk_score.toFixed(2)} / 100\n`;
-        text += `Risk Level: ${zone.risk_level}\n\n`;
+        let causesHtml = "";
+        result.causes.forEach(c => causesHtml += `<li>${c}</li>`);
 
-        text += `Likely Causes:\n`;
-        result.causes.forEach(c => text += `- ${c}\n`);
+        let recsHtml = "";
+        result.recs.forEach(r => recsHtml += `<li>${r}</li>`);
 
-        text += `\nRecommended Actions:\n`;
-        result.recs.forEach(r => text += `- ${r}\n`);
+        const html = `
+            <div class="report-header">
+                <div class="report-title">
+                    <h3>Manual Prediction Result</h3>
+                    <p>Live scenario analysis based on user-provided values</p>
+                </div>
 
-        document.getElementById("manualOutput").innerText = text;
+                <div class="risk-badge ${badgeClass(zone.risk_level)}">
+                    ${zone.risk_level.toUpperCase()} RISK
+                </div>
+            </div>
+
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <span>⏱ Predicted Drying Time</span>
+                    <strong>${zone.drying_time_hr.toFixed(2)} hr</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>⚠ Moisture Risk Score</span>
+                    <strong>${zone.moisture_risk_score.toFixed(2)} / 100</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>🛣 Drainage Efficiency</span>
+                    <strong>${zone.drainage_efficiency.toFixed(2)}</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>🚧 Construction Disturbance</span>
+                    <strong>${zone.construction_disturbance}</strong>
+                </div>
+            </div>
+
+            <div class="insight-grid">
+                <div class="insight-box cause-box">
+                    <h3>Likely Causes</h3>
+                    <ul>${causesHtml}</ul>
+                </div>
+
+                <div class="insight-box action-box">
+                    <h3>Recommended Actions</h3>
+                    <ul>${recsHtml}</ul>
+                </div>
+            </div>
+        `;
+
+        document.getElementById("manualOutput").innerHTML = html;
     }
 
     function zoneToCSVRow(z) {
@@ -1112,10 +1478,17 @@
 
     if (localStorage.getItem("theme") === "dark") {
         document.body.classList.add("dark-mode");
-        document.getElementById("themeButton").innerText = "Switch to Light Mode";
     }
 
-    generateData();
+    if (localStorage.getItem("loggedIn") === "true") {
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("app").style.display = "block";
+        generateData();
+    }
+
+    if (document.body.classList.contains("dark-mode")) {
+        document.getElementById("themeButton").innerText = "Switch to Light Mode";
+    }
 </script>
 
 </body>
