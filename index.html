@@ -9,6 +9,7 @@
             background: #f4f8fb;
             margin: 0;
             padding: 0;
+            color: #111827;
         }
 
         header {
@@ -26,6 +27,16 @@
         header p {
             margin-top: 8px;
             font-size: 16px;
+        }
+
+        .theme-toggle {
+            margin-top: 15px;
+        }
+
+        .theme-toggle button {
+            background: white;
+            color: #0b3d5c;
+            font-weight: bold;
         }
 
         .container {
@@ -144,6 +155,126 @@
             color: #666;
             font-size: 14px;
         }
+
+        .zone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .zone-box {
+            padding: 12px 6px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .zone-box:hover {
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+
+        .zone-low {
+            background: #16a34a;
+        }
+
+        .zone-medium {
+            background: #f59e0b;
+        }
+
+        .zone-high {
+            background: #dc2626;
+        }
+
+        .grid-legend {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        body.dark-mode {
+            background: #0f172a;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode header {
+            background: #020617;
+        }
+
+        body.dark-mode section {
+            background: #1e293b;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .card {
+            background: #1e293b;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .card p {
+            color: #cbd5e1;
+        }
+
+        body.dark-mode .value {
+            color: #38bdf8;
+        }
+
+        body.dark-mode h2 {
+            color: #38bdf8;
+        }
+
+        body.dark-mode table {
+            background: #1e293b;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode td {
+            border-bottom: 1px solid #334155;
+        }
+
+        body.dark-mode th {
+            background: #020617;
+        }
+
+        body.dark-mode input,
+        body.dark-mode select {
+            background: #0f172a;
+            color: #e5e7eb;
+            border: 1px solid #475569;
+        }
+
+        body.dark-mode .output {
+            background: #0f172a;
+            color: #e5e7eb;
+        }
+
+        body.dark-mode .small-note {
+            color: #cbd5e1;
+        }
+
+        body.dark-mode .theme-toggle button {
+            background: #38bdf8;
+            color: #020617;
+        }
     </style>
 </head>
 
@@ -152,9 +283,13 @@
 <header>
     <h1>Urban Moisture Intelligence System</h1>
     <p>Browser-based prototype for identifying slow-drying neighborhoods after rainfall</p>
+
+    <div class="theme-toggle">
+        <button onclick="toggleTheme()" id="themeButton">Switch to Dark Mode</button>
+    </div>
 </header>
 
-<div   class="container">
+<div class="container">
 
     <section>
         <h2>Controls</h2>
@@ -201,6 +336,33 @@
     <section>
         <h2>Top Priority Zones</h2>
         <div id="priorityTable"></div>
+    </section>
+
+    <section>
+        <h2>Mini Risk Map Grid</h2>
+        <p class="small-note">
+            Each box represents one neighborhood zone. Green = Low risk, Orange = Medium risk, Red = High risk.
+            Click any zone box to open its detailed report.
+        </p>
+
+        <div class="grid-legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background:#16a34a;"></div>
+                <span>Low Risk</span>
+            </div>
+
+            <div class="legend-item">
+                <div class="legend-color" style="background:#f59e0b;"></div>
+                <span>Medium Risk</span>
+            </div>
+
+            <div class="legend-item">
+                <div class="legend-color" style="background:#dc2626;"></div>
+                <span>High Risk</span>
+            </div>
+        </div>
+
+        <div id="zoneGrid" class="zone-grid"></div>
     </section>
 
     <section>
@@ -491,7 +653,7 @@
         updateDashboard();
         populateSelectors();
         showPriorityZones();
-        alert("Synthetic city data generated successfully.");
+        renderZoneGrid();
     }
 
     function updateDashboard() {
@@ -579,6 +741,64 @@
         html += "</table>";
 
         document.getElementById("priorityTable").innerHTML = html;
+    }
+
+    function renderZoneGrid() {
+        const grid = document.getElementById("zoneGrid");
+
+        if (!grid) {
+            return;
+        }
+
+        grid.innerHTML = "";
+
+        zones.forEach(z => {
+            const box = document.createElement("div");
+
+            box.classList.add("zone-box");
+
+            if (z.risk_level === "Low") {
+                box.classList.add("zone-low");
+            } else if (z.risk_level === "Medium") {
+                box.classList.add("zone-medium");
+            } else {
+                box.classList.add("zone-high");
+            }
+
+            box.innerText = "Z" + String(z.zone_id).padStart(3, "0");
+
+            box.title =
+                "Zone Z" + String(z.zone_id).padStart(3, "0") +
+                "\nRisk: " + z.risk_level +
+                "\nScore: " + z.moisture_risk_score.toFixed(2) +
+                "\nDrying Time: " + z.drying_time_hr.toFixed(2) + " hr";
+
+            box.onclick = function () {
+                document.getElementById("zoneSelect").value = z.zone_id;
+                showZoneReport();
+
+                document.getElementById("zoneReport").scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            };
+
+            grid.appendChild(box);
+        });
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle("dark-mode");
+
+        const button = document.getElementById("themeButton");
+
+        if (document.body.classList.contains("dark-mode")) {
+            button.innerText = "Switch to Light Mode";
+            localStorage.setItem("theme", "dark");
+        } else {
+            button.innerText = "Switch to Dark Mode";
+            localStorage.setItem("theme", "light");
+        }
     }
 
     function mainConcern(z) {
@@ -888,6 +1108,11 @@
         a.click();
 
         URL.revokeObjectURL(url);
+    }
+
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+        document.getElementById("themeButton").innerText = "Switch to Light Mode";
     }
 
     generateData();
